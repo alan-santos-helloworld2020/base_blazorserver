@@ -1,0 +1,67 @@
+@page "/cadastro"
+@using Blazor.back.Services;
+@inject ClienteService service;
+@inject NavigationManager navigation;
+
+<PageTitle>Cadastro</PageTitle>
+
+
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+        <h3 class="text-center">Cadastro de Clientes</h3>
+        <br>
+        <EditForm Model="@cliente" OnValidSubmit="Salvar">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="@nameof(cliente.Nome)">@nameof(cliente.Nome)</label>
+                <InputText id="@nameof(cliente.Nome)" @bind-Value="cliente.Nome" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Nome)" style="color: red;" />
+            </div>
+            <div class="form-group">
+                <label for="@nameof(cliente.Telefone)">@nameof(cliente.Telefone)</label>
+                <InputText id="@nameof(cliente.Telefone)" @bind-Value="cliente.Telefone" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Telefone)" style="color: red;" />
+            </div>
+            <div class="form-group">
+                <label for="@nameof(cliente.Email)">@nameof(cliente.Email)</label>
+                <InputText id="@nameof(cliente.Email)" @bind-Value="cliente.Email" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Email)" style="color: red;" />
+            </div>
+            <div class="form-group">
+                <label for="@nameof(cliente.Cep)">@nameof(cliente.Cep)</label>
+                <InputText id="@nameof(cliente.Cep)" @bind-Value="cliente.Cep" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Cep)" style="color: red;" />
+            </div>
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <button class="btn btn-md btn-success mt-3" type="submit">Salvar</button>
+                <button class="btn btn-md btn-primary mt-3" type="reset">Limpar</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+
+
+
+
+@code {
+
+    private Cliente cliente = new Cliente();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected async void Salvar()
+    {
+
+        await service.Salvar(cliente);
+        navigation.NavigateTo("/clientes");
+
+    }
+
+
+
+
+}

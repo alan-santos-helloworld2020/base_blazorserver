@@ -1,0 +1,23 @@
+table{
+    padding: 0px !important;
+    margin: 0px !important;
+    width: 100% !important;
+}
+thead{
+    border-bottom: 2px solid black;
+}
+tr{
+    text-align: center !important;
+    
+
+}
+th, td{
+    
+ 
+}
+.btn{
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

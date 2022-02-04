@@ -1,0 +1,67 @@
+@using Blazor.back.Models;
+@inject ClienteService service;
+@inject NavigationManager navigation;
+@inject IJSRuntime JS;
+
+
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+        <h3 class="text-center">Edição do Cliente</h3>
+        <br>
+        <EditForm Model="@cliente" OnValidSubmit="@EditarCliente">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="@nameof(cliente.Nome)">@nameof(cliente.Nome)</label>
+                <InputText id="@nameof(cliente.Nome)" @bind-Value="cliente.Nome" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Nome)" />
+            </div>
+            <div class="form-group">
+                <label for="@nameof(cliente.Telefone)">@nameof(cliente.Telefone)</label>
+                <InputText id="@nameof(cliente.Telefone)" @bind-Value="cliente.Telefone" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Telefone)" />
+            </div>
+            <div class="form-group">
+                <label for="@nameof(cliente.Email)">@nameof(cliente.Email)</label>
+                <InputText id="@nameof(cliente.Email)" @bind-Value="cliente.Email" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="@nameof(cliente.Cep)">@nameof(cliente.Cep)</label>
+                <InputText id="@nameof(cliente.Cep)" @bind-Value="cliente.Cep" class="form-control" />
+                <ValidationMessage For="@(() => cliente.Cep)" />
+            </div>
+            <div class="d-grid gap-2 d-flex justify-content-end">
+                <button id="btnEditar" class="btn btn-md btn-success mt-3" type="submit">
+                    Editar
+                </button>
+                <button id="btnLimpar" class="btn btn-md btn-primary mt-3" type="reset" @onclick="Limpar">
+                    Cancelar
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public int idCliente { get; set; }
+    [Parameter] public Cliente cliente { get; set; }
+    async public void EditarCliente()
+    {
+        await service.Editar(idCliente, cliente);
+        navigation.NavigateTo(navigation.Uri, forceLoad: true);
+        idCliente = 0;
+        cliente = null;
+
+    }
+
+    [Parameter]
+    public EventCallback Limpar {get; set;}
+    
+
+
+
+
+
+}

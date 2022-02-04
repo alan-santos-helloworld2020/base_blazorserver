@@ -1,0 +1,111 @@
+@page "/clientes"
+@using Blazor.back.Services;
+@using System.Text
+@inject ClienteService service;
+@inject IJSRuntime JS;
+@inject NavigationManager navigation;
+
+
+<PageTitle>Clientes</PageTitle>
+
+@if (Mostrar.mostrar)
+{
+    <div class="row  justify-content-center mt-5">
+    <div class="col-lg-10">
+        <h3 class="text-center">Tabela de Clientes</h3>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Data</th>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Cep</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in clientes)
+                    {
+                        <tr class="mt-5">
+                            <td class="mt-5">@item.Id</td>
+                            <td class="mt-5">@item.Data</td>
+                            <td class="mt-5">@item.Nome</td>
+                            <td class="mt-5">@item.Telefone</td>
+                            <td class="mt-5">@item.Email</td>
+                            <td class="mt-5">@item.Cep</td>
+                            <td class="mt-5">
+                                <button class="btn btn-info" @onclick="()=> modalEdit(item.Id,item)">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                            </td>
+                            <td class="mt-5">
+                                <button class="btn btn-danger" @onclick="()=> deletar(item.Id)">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </td>
+                            <td class="mt-5">
+                                <button class="btn btn-warning" @onclick="()=> imprimir(item.Id)">
+                                    <i class="material-icons">print</i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <FormularioEdicao cliente="@clienteEdicao" idCliente="@clienteId" Limpar="@Limpar"></FormularioEdicao>
+}
+
+
+@code {
+    private bool mostrar { get; set; }
+    private List<Cliente> clientes = new List<Cliente>();
+    public int clienteId = 0;
+    public Cliente clienteEdicao = new Cliente();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Mostrar.mostrar = true;
+        clientes = await Task.Run(() => service.Listar());
+    }
+
+    async private void modalEdit(int id, Cliente cl)
+    {
+        Mostrar.mostrar = false;
+        clienteId = Convert.ToInt32(id);
+        clienteEdicao = cl;
+
+    }
+    async private void deletar(int id)
+    {
+        bool question = await JS.InvokeAsync<bool>("confirm", "Deseja Realmente Remover");
+        if (question)
+        {
+
+            await service.Deletar(id);
+            navigation.NavigateTo(navigation.Uri, forceLoad: true);
+
+
+        }
+    }
+    async private void imprimir(int id)
+    {
+        string clienteNome = await service.Imprimir(id);
+        JS.InvokeVoidAsync("alert",$"Dados do(a) Cliente {clienteNome}\nImpressos com Sucesso :-)");
+    }
+    
+    protected void Limpar()
+    {
+         Mostrar.mostrar = true;
+    }
+ 
+
+
+
+}
